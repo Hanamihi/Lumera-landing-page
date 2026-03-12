@@ -32,7 +32,7 @@
         height: 80vh;
         min-height: 500px;
         box-sizing: border-box;
-        overflow: hidden; /* Đảm bảo ảnh không tràn ra ngoài khi zoom */
+        overflow: hidden; /* PC: Đảm bảo ảnh không tràn ra ngoài khi zoom */
     }
 
     /* --- NHÃN LÔ ĐẤT (SVG TEXT) --- */
@@ -55,12 +55,10 @@
         padding: 25px; 
         border-radius: 16px; 
         box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        width: 300px; /* Mở rộng xíu cho Desktop */
+        width: 300px; 
         z-index: 1000;      
         border-top: 8px solid #d35400; 
         transition: all 0.3s ease;
-        
-        /* BÍ QUYẾT LÀ DÒNG NÀY: Ép padding nằm bên trong kích thước 100% */
         box-sizing: border-box; 
     }
 
@@ -107,14 +105,22 @@
     @media (max-width: 768px) {
         body { 
             padding: 10px; 
-            padding-bottom: 60px; /* Tạo khoảng trống ở đáy để cuộn trang thoải mái */
+            padding-bottom: 60px; 
         }
 
         .map-container {
             margin-right: 0; 
             width: 100%;     
-            height: 50vh;    
+            height: auto;       /* Bản sửa: Cho khung tự động dài ra chứa hết bảng thông tin */
+            min-height: unset;
+            overflow: visible;  /* Bản sửa: Không cắt bỏ phần dưới của bảng nữa */
+        }
+
+        /* Định hình lại chiều cao cho riêng bản đồ trên Mobile */
+        #map-svg {
+            height: 50vh !important; 
             min-height: 350px;
+            background: white;
         }
 
         #info-box {
@@ -123,17 +129,15 @@
             right: 0;
             width: 100%;      
             margin-top: 15px;
-            margin-bottom: 0;
-            padding: 15px; /* Rút gọn lề bên trong để chữ có không gian thở */
+            margin-bottom: 20px;
+            padding: 15px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        /* Thu nhỏ text một chút để vừa vặn với chiều ngang điện thoại */
         #info-box h3 { font-size: 18px; margin-bottom: 10px; }
         .info-row { font-size: 13px; margin-bottom: 8px; }
     }
 </style>
-
 </head>
 <body>
     <h2 style="color: #2c3e50;"> <div class="header">
@@ -5583,6 +5587,7 @@ window.onload = function() {
 </script>
 </body>
 </html>
+
 
 
 
