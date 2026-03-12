@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <meta charset="UTF-8">
     <title>Lumera city-Quỹ đất nhà ở thấp tầng - Dashboard</title>
-   <style>
+<style>
     body { 
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
         display: flex; 
@@ -55,10 +55,13 @@
         padding: 25px; 
         border-radius: 16px; 
         box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        width: 280px;       
+        width: 300px; /* Mở rộng xíu cho Desktop */
         z-index: 1000;      
         border-top: 8px solid #d35400; 
         transition: all 0.3s ease;
+        
+        /* BÍ QUYẾT LÀ DÒNG NÀY: Ép padding nằm bên trong kích thước 100% */
+        box-sizing: border-box; 
     }
 
     #info-box h3 { 
@@ -102,23 +105,32 @@
 
     /* --- ĐIỀU CHỈNH RIÊNG CHO ĐIỆN THOẠI --- */
     @media (max-width: 768px) {
-        body { padding: 10px; }
+        body { 
+            padding: 10px; 
+            padding-bottom: 60px; /* Tạo khoảng trống ở đáy để cuộn trang thoải mái */
+        }
 
         .map-container {
             margin-right: 0; 
             width: 100%;     
-            height: 50vh;    /* Thu nhỏ bản đồ để có chỗ cho bảng bên dưới */
+            height: 50vh;    
             min-height: 350px;
         }
 
         #info-box {
-            position: relative; /* Không ghim nữa mà đẩy xuống dưới cùng */
-            top: 20px;
+            position: relative; 
+            top: 0;
             right: 0;
             width: 100%;      
-            margin-bottom: 40px;
+            margin-top: 15px;
+            margin-bottom: 0;
+            padding: 15px; /* Rút gọn lề bên trong để chữ có không gian thở */
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
+        /* Thu nhỏ text một chút để vừa vặn với chiều ngang điện thoại */
+        #info-box h3 { font-size: 18px; margin-bottom: 10px; }
+        .info-row { font-size: 13px; margin-bottom: 8px; }
     }
 </style>
 
@@ -5571,6 +5583,7 @@ window.onload = function() {
 </script>
 </body>
 </html>
+
 
 
 
