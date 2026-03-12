@@ -5525,19 +5525,52 @@ infoBox.addEventListener('click', function(e) {
         e.stopPropagation();
     });
 // Khởi tạo tính năng Zoom và Pan cho bản đồ
-    window.onload = function() {
+window.onload = function() {
+        // 1. Khai báo Cấu hình Hammer.js để đọc cử chỉ ngón tay (cho Mobile)
+        var eventsHandler = {
+            haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
+            init: function(options) {
+                var instance = options.instance, initialScale = 1, pannedX = 0, pannedY = 0;
+                this.hammer = new Hammer(options.svgElement, { 
+                    recognizers: [ [Hammer.Pan, {direction: Hammer.DIRECTION_ALL}], [Hammer.Pinch, {enable: true}] ] 
+                });
+                
+                // Kéo 1 ngón (Pan)
+                this.hammer.on('panstart panmove', function(ev){
+                    if (ev.type === 'panstart') { pannedX = 0; pannedY = 0; }
+                    instance.panBy({x: ev.deltaX - pannedX, y: ev.deltaY - pannedY});
+                    pannedX = ev.deltaX; pannedY = ev.deltaY;
+                });
+                
+                // Thu/phóng 2 ngón (Pinch)
+                this.hammer.on('pinchstart pinchmove', function(ev){
+                    if (ev.type === 'pinchstart') { initialScale = instance.getZoom(); }
+                    instance.zoomAtPoint(initialScale * ev.scale, {x: ev.center.x, y: ev.center.y});
+                });
+            },
+            destroy: function(){ this.hammer.destroy(); }
+        };
+
+        // 2. Chạy khởi tạo bản đồ (GỘP TẤT CẢ VÀO 1 LẦN GỌI DUY NHẤT)
         svgPanZoom('#map-svg', {
             zoomEnabled: true,
-            controlIconsEnabled: true, // Hiện bảng điều khiển +/- nhỏ ở góc
-            fit: true,                 // Tự động scale vừa khung hình
-            center: true,              // Căn giữa bản đồ
-            minZoom: 0.5,              // Giới hạn thu nhỏ
-            maxZoom: 10,               // Giới hạn phóng to
-            mouseWheelZoomEnabled: true // Cho phép dùng lăn chuột để zoom
+            controlIconsEnabled: true,  // Hiện nút +/-
+            fit: true,                  // Auto scale
+            center: true,               // Căn giữa
+            minZoom: 0.5,
+            maxZoom: 10,
+            
+            // Cấu hình cho PC:
+            mouseWheelZoomEnabled: true, // Cho phép dùng lăn chuột
+            
+            // Cấu hình cho Mobile:
+            preventMouseEventsDefault: false,  // Quan trọng: Cho phép người dùng cuộn (scroll) trang web bình thường
+            customEventsHandler: eventsHandler // Gắn bộ não Hammer.js vào để nhận diện vuốt/chạm
         });
     };
 </script>
 </body>
 </html>
+
 
 
