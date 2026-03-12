@@ -3,8 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <meta charset="UTF-8">
     <title>Lumera city-Quỹ đất nhà ở thấp tầng - Dashboard</title>
    <style>
@@ -5511,10 +5509,7 @@
 
                 // Hiển thị Popup
                 infoBox.style.display = "block";
-                infoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-
-                e.stopPropagation(); 
+                e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài body
             }
         });
     });
@@ -5525,46 +5520,18 @@
 infoBox.addEventListener('click', function(e) {
         e.stopPropagation();
     });
-// Khởi tạo tính năng Zoom, Pan và Cảm ứng cho bản đồ
+// Khởi tạo tính năng Zoom và Pan cho bản đồ
     window.onload = function() {
-        // 1. Cấu hình "bộ não" Hammer.js để đọc cử chỉ ngón tay
-        var eventsHandler = {
-            init: function(options) {
-                var instance = options.instance, initialScale = 1, pannedX = 0, pannedY = 0;
-                this.hammer = new Hammer(options.svgElement, { 
-                    recognizers: [ [Hammer.Pan, {direction: Hammer.DIRECTION_ALL}], [Hammer.Pinch, {enable: true}] ] 
-                });
-                
-                // Kéo 1 ngón (Pan)
-                this.hammer.on('panstart panmove', function(ev){
-                    if (ev.type === 'panstart') { pannedX = 0; pannedY = 0; }
-                    instance.panBy({x: ev.deltaX - pannedX, y: ev.deltaY - pannedY});
-                    pannedX = ev.deltaX; pannedY = ev.deltaY;
-                });
-                
-                // Thu/phóng 2 ngón (Pinch)
-                this.hammer.on('pinchstart pinchmove', function(ev){
-                    if (ev.type === 'pinchstart') { initialScale = instance.getZoom(); }
-                    instance.zoomAtPoint(initialScale * ev.scale, {x: ev.center.x, y: ev.center.y});
-                });
-            },
-            destroy: function(){ this.hammer.destroy(); }
-        };
-
-        // 2. Chạy bản đồ
         svgPanZoom('#map-svg', {
             zoomEnabled: true,
-            controlIconsEnabled: true, 
-            fit: true,                 
-            center: true,              
-            minZoom: 0.5,              
-            maxZoom: 10,               
-            customEventsHandler: eventsHandler // Gọi cấu hình ngón tay ở trên vào đây
+            controlIconsEnabled: true, // Hiện bảng điều khiển +/- nhỏ ở góc
+            fit: true,                 // Tự động scale vừa khung hình
+            center: true,              // Căn giữa bản đồ
+            minZoom: 0.5,              // Giới hạn thu nhỏ
+            maxZoom: 10,               // Giới hạn phóng to
+            mouseWheelZoomEnabled: true // Cho phép dùng lăn chuột để zoom
         });
     };
 </script>
 </body>
-
 </html>
-
-
