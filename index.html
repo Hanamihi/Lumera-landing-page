@@ -5510,6 +5510,9 @@
 
                 // Hiển thị Popup
                 infoBox.style.display = "block";
+                if (window.innerWidth <= 768) {
+                    infoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
                 e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài body
             }
         });
@@ -5536,4 +5539,5 @@ infoBox.addEventListener('click', function(e) {
 </script>
 </body>
 </html>
+
 
