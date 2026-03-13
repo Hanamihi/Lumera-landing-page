@@ -173,30 +173,34 @@
         </div>
     </div>
     <script>
-    // 1. DÁN ĐƯỜNG LINK GOOGLE APP SCRIPT CỦA BẠN VÀO ĐÂY
+    // 1. LINK API TỪ GOOGLE SHEETS
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5ADG8W8fLHU4aCP27p3j4N0sPlQH7jkBkE3tgkzMBGrFtvVk9eRf3j--Ls4LIbo6j/exec"; 
 
-    let dataBDS = {}; // Biến chứa dữ liệu lấy từ mạng về
+    let dataBDS = {}; 
     const infoBox = document.getElementById('info-box');
 
-    // 2. KÉO DỮ LIỆU TỪ GOOGLE SHEET KHI TẢI TRANG
+    // 2. KÉO DỮ LIỆU TỪ GOOGLE SHEET VỀ TRƯỚC
     fetch(SCRIPT_URL)
         .then(response => response.json())
         .then(data => {
-            dataBDS = data; // Nạp dữ liệu vào biến
-            initMap();      // Bắt đầu vẽ bản đồ
+            console.log("Đã tải dữ liệu thành công:", data); // Báo cáo ra console
+            dataBDS = data; 
+            
+            initMap();      // BƯỚC 1: Xử lý dữ liệu, vẽ chữ, gắn sự kiện click
+            initZoom();     // BƯỚC 2: Chỉ bật Zoom SAU KHI đã vẽ xong mọi thứ
         })
         .catch(error => {
             console.error("Lỗi tải dữ liệu:", error);
-            alert("Không thể tải dữ liệu từ Google Sheets. Vui lòng tải lại trang!");
+            alert("Không thể tải dữ liệu từ server. Vui lòng tải lại trang!");
         });
 
     // 3. HÀM XỬ LÝ VÀ TƯƠNG TÁC BẢN ĐỒ
     function initMap() {
-        document.querySelectorAll('svg > g[id]').forEach(lot => {
+        // BẢN SỬA LỖI: Xóa dấu ">" đi để CSS tìm được lô đất dù nó nằm ở đâu trong SVG
+        document.querySelectorAll('svg g[id]').forEach(lot => {
             const id = lot.id;
 
-            // --- BƯỚC A: TẠO NHÃN TÊN VÀ TỰ ĐỘNG XOAY ---
+            // --- TẠO NHÃN TÊN VÀ TỰ ĐỘNG XOAY ---
             if (id.startsWith('LK') || id.startsWith('HH')) {
                 const bbox = lot.getBBox();
                 const centerX = bbox.x + bbox.width / 2;
@@ -205,15 +209,15 @@
                 let textAngle = 0;
                 const shape = lot.querySelector('rect, polygon, path'); 
 
-                // Đổi màu lô đất thành Xám đen nếu đã bán trên Google Sheet
+                // Tô màu xám cho các lô "Đã bán"
                 if (shape && dataBDS[id]) {
                     if (dataBDS[id].trangThai === "Đã bán" || dataBDS[id].trangThai === "Đã Bán") {
-                        shape.style.fill = "#7f8c8d"; // Tô màu xám
-                        shape.style.opacity = "0.7";  // Hơi trong suốt
+                        shape.style.fill = "#7f8c8d"; 
+                        shape.style.opacity = "0.8";  
                     }
                 }
 
-                // Tính góc nghiêng
+                // Tính toán góc xoay
                 if (shape) {
                     if (shape.tagName.toLowerCase() === 'rect') {
                         let baseAngle = 0;
@@ -265,21 +269,20 @@
                 lot.appendChild(textLabel);
             }
 
-            // --- BƯỚC B: SỰ KIỆN CLICK VÀO LÔ ĐẤT ---
+            // --- SỰ KIỆN CLICK VÀO LÔ ĐẤT ---
             lot.addEventListener('click', function(e) {
                 const info = dataBDS[id]; 
                 if (info) {
                     document.getElementById('malo').innerText = "Lô: " + id;
                     
-                    // Logic màu sắc trạng thái
                     const statusEl = document.getElementById('trangThai');
                     statusEl.innerText = info.trangThai;
                     if (info.trangThai === "Đang bán") {
-                        statusEl.style.color = "#27ae60"; // Màu xanh lá
+                        statusEl.style.color = "#27ae60"; 
                     } else if (info.trangThai === "Đã bán" || info.trangThai === "Đã Bán") {
-                        statusEl.style.color = "#e74c3c"; // Màu đỏ
+                        statusEl.style.color = "#e74c3c"; 
                     } else {
-                        statusEl.style.color = "#f39c12"; // Màu cam
+                        statusEl.style.color = "#f39c12"; 
                     }
 
                     document.getElementById('loai').innerText = info.loai;
@@ -312,14 +315,14 @@
                 }
             });
         });
-    } // HẾT HÀM initMap()
+    }
 
-    // 4. XỬ LÝ ĐÓNG POPUP
+    // Đóng popup
     document.addEventListener('click', function() { infoBox.style.display = "none"; });
     infoBox.addEventListener('click', function(e) { e.stopPropagation(); });
 
-    // 5. KHỞI TẠO ZOOM VÀ PAN
-    window.onload = function() {
+    // 4. HÀM KHỞI TẠO ZOOM (CHỈ GỌI SAU KHI ĐÃ TẢI XONG DỮ LIỆU)
+    function initZoom() {
         var eventsHandler = {
             haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
             init: function(options) {
@@ -351,10 +354,11 @@
             preventMouseEventsDefault: false, 
             customEventsHandler: eventsHandler 
         });
-    };
+    }
 </script>
 </body>
 </html>
+
 
 
 
