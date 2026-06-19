@@ -5,7 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <meta charset="UTF-8">
-    <title>Quản lý thông tin dự án (create by Mihi)</title>
+    <title>Quản lý thông tin dự án Lumera City (create by Mihi)</title>
 <style>
     body { 
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
@@ -32,7 +32,7 @@
         height: 80vh;
         min-height: 500px;
         box-sizing: border-box;
-        overflow: hidden; /* PC: Đảm bảo ảnh không tràn ra ngoài khi zoom */
+        overflow: hidden; 
     }
 
     /* --- NHÃN LÔ ĐẤT (SVG TEXT) --- */
@@ -101,6 +101,35 @@
         filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); 
     }
 
+    /* --- NÚT CALL TO ACTION (CTA) XUNG NHỊP --- */
+    .cta-pulse-button {
+        display: block;
+        text-align: center;
+        background: #d35400;
+        color: white !important;
+        text-decoration: none !important;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 12px 10px;
+        border-radius: 8px;
+        margin-top: 18px;
+        box-sizing: border-box;
+        box-shadow: 0 0 0 0 rgba(211, 84, 0, 0.7);
+        animation: cta-pulse-effect 1.6s infinite ease-in-out;
+        transition: all 0.3s ease;
+    }
+
+    .cta-pulse-button:hover {
+        background: #e67e22;
+        transform: scale(1.02);
+    }
+
+    @keyframes cta-pulse-effect {
+        0% { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(211, 84, 0, 0.6); }
+        65% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(211, 84, 0, 0); }
+        100% { transform: scale(0.97); box-shadow: 0 0 0 0 rgba(211, 84, 0, 0); }
+    }
+
     /* --- ĐIỀU CHỈNH RIÊNG CHO ĐIỆN THOẠI --- */
     @media (max-width: 768px) {
         body { 
@@ -111,12 +140,11 @@
         .map-container {
             margin-right: 0; 
             width: 100%;     
-            height: auto;       /* Bản sửa: Cho khung tự động dài ra chứa hết bảng thông tin */
+            height: auto;       
             min-height: unset;
-            overflow: visible;  /* Bản sửa: Không cắt bỏ phần dưới của bảng nữa */
+            overflow: visible;  
         }
 
-        /* Định hình lại chiều cao cho riêng bản đồ trên Mobile */
         #map-svg {
             height: 50vh !important; 
             min-height: 350px;
@@ -142,7 +170,7 @@
 <body>
     <h2 style="color: #2c3e50;"> <div class="header">
         QUẢN LÝ THÔNG TIN QUỸ ĐẤT DỰ ÁN<br>
-        <small>Hạng mục công trình nhà ở thấp tầng</small>
+        <small>Hạng mục công trình nhà ở thấp tầng - Lumera City</small>
     </div>
 </h2>
 
@@ -172,6 +200,10 @@
         <span>Tổng diện tích sàn:</span> <b id="tongSan" style="color: #d35400;"></b>
             </div>
         </div>
+        
+        <a href="https://zalo.me/09xxxxxxx" target="_blank" class="cta-pulse-button">
+            📞 Liên hệ ngay để nhận thông tin dự án
+        </a>
     </div>
     <script>
     // 1. LINK API TỪ GOOGLE SHEETS
@@ -184,11 +216,11 @@
     fetch(SCRIPT_URL)
         .then(response => response.json())
         .then(data => {
-            console.log("Đã tải dữ liệu thành công:", data); // Báo cáo ra console
+            console.log("Đã tải dữ liệu thành công:", data);
             dataBDS = data; 
             
-            initMap();      // BƯỚC 1: Xử lý dữ liệu, vẽ chữ, gắn sự kiện click
-            initZoom();     // BƯỚC 2: Chỉ bật Zoom SAU KHI đã vẽ xong mọi thứ
+            initMap();
+            initZoom();
         })
         .catch(error => {
             console.error("Lỗi tải dữ liệu:", error);
@@ -197,11 +229,9 @@
 
     // 3. HÀM XỬ LÝ VÀ TƯƠNG TÁC BẢN ĐỒ
     function initMap() {
-        // BẢN SỬA LỖI: Xóa dấu ">" đi để CSS tìm được lô đất dù nó nằm ở đâu trong SVG
         document.querySelectorAll('svg g[id]').forEach(lot => {
             const id = lot.id;
 
-            // --- TẠO NHÃN TÊN VÀ TỰ ĐỘNG XOAY ---
             if (id.startsWith('LK') || id.startsWith('HH')) {
                 const bbox = lot.getBBox();
                 const centerX = bbox.x + bbox.width / 2;
@@ -210,7 +240,6 @@
                 let textAngle = 0;
                 const shape = lot.querySelector('rect, polygon, path'); 
 
-                // Tô màu xám cho các lô "Đã bán"
                 if (shape && dataBDS[id]) {
                     if (dataBDS[id].trangThai === "Đã bán" || dataBDS[id].trangThai === "Đã Bán") {
                         shape.style.fill = "#7f8c8d"; 
@@ -218,7 +247,6 @@
                     }
                 }
 
-                // Tính toán góc xoay
                 if (shape) {
                     if (shape.tagName.toLowerCase() === 'rect') {
                         let baseAngle = 0;
@@ -270,7 +298,6 @@
                 lot.appendChild(textLabel);
             }
 
-            // --- SỰ KIỆN CLICK VÀO LÔ ĐẤT ---
             lot.addEventListener('click', function(e) {
                 const info = dataBDS[id]; 
                 if (info) {
@@ -319,11 +346,10 @@
         });
     }
 
-    // Đóng popup
     document.addEventListener('click', function() { infoBox.style.display = "none"; });
     infoBox.addEventListener('click', function(e) { e.stopPropagation(); });
 
-    // 4. HÀM KHỞI TẠO ZOOM (CHỈ GỌI SAU KHI ĐÃ TẢI XONG DỮ LIỆU)
+    // 4. HÀM KHỞI TẠO ZOOM
     function initZoom() {
         var eventsHandler = {
             haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
