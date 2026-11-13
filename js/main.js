@@ -31,7 +31,7 @@ const PROJECT_CONFIG = {
             prefix: "LK", 
             keywords: ["liền kề", "lien ke"], 
             name: "Liền kề", 
-            label: "Đất ở liền kề", 
+            label: "Nhà ở liền kề", 
             color: "#00aeef", 
             autoFillSvg: true,
             showInLegend: true
@@ -40,7 +40,7 @@ const PROJECT_CONFIG = {
             prefix: "HH", 
             keywords: ["hỗn hợp", "hon hop", "kết hợp kinh doanh"], 
             name: "Hỗn Hợp", 
-            label: "Đất ở kết hợp kinh doanh", 
+            label: "Nhà ở kết hợp kinh doanh", 
             color: "#4caf50", 
             autoFillSvg: true,
             showInLegend: true
