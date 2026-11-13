@@ -44,24 +44,6 @@ const PROJECT_CONFIG = {
             color: "#4caf50", 
             autoFillSvg: true,
             showInLegend: true
-        },
-        { 
-            prefix: "BT", 
-            keywords: ["biệt thự", "biet thu"], 
-            name: "Biệt thự", 
-            label: "Đất ở biệt thự", 
-            color: "#fbbc04", 
-            autoFillSvg: false,
-            showInLegend: true
-        },
-        { 
-            prefix: "SH", 
-            keywords: ["shophouse", "thương mại"], 
-            name: "Shophouse", 
-            label: "Nhà phố thương mại", 
-            color: "#9b59b6", 
-            autoFillSvg: false,
-            showInLegend: true
         }
     // Ví dụ khi dự án mới có thêm Shophouse hoặc Đất nền, chỉ cần bỏ comment dòng dưới:
     // { prefix: "SH", keywords: ["shophouse", "thương mại"], name: "Shophouse", label: "Nhà phố thương mại", color: "#9b59b6", autoFillSvg: false, showInLegend: true },
